@@ -7,12 +7,12 @@ Aircraft bird strikes can have significant impact on public and private interest
 
 ### __Description of the Data__  
 
-The bird strike data set being visualized contains approximately 10,000 observations for for 50 airports in 29 states in the US between 1990 and 2002. Bird strikes are classified into four damage categories: no damage, minor, medium, and substantial. There are several factors that contribute to / are related to a bird strike event and its severity, these <may> include:   
+The bird strike data set being visualized contains approximately 10,000 observations for for 50 `airports` in 29 `states` in the US between 1990 and 2002. Bird strikes are classified into four `damage categories`: no damage, minor, medium, and substantial. There are several factors that contribute to / are related to a bird strike event and its severity, these <may> include:   
 
-- flight phase (climb, approach, take-off, descent, and landing roll).  
-- time of day (day, night, dusk, dawn).   
-- wildlife size (small, medium, large). 
-- Date day month and year.
+- `flight phase` (climb, approach, take-off, descent, and landing roll).  
+- `time of day` (day, night, dusk, dawn).   
+- `wildlife size` (small, medium, large). 
+- `date` (day month and year).
 
 ### __Research Questions to be Explored__  
     
