@@ -17,7 +17,8 @@ In this tab, the left graph shows the number of birdstrikes over time, with the 
 - **Date Range Between**: slider bar, located above the area chart, allows for customization of range of years for which to show data.  
 - **Factor**: dropdown, located above the bar chart, allows choosing X-axis variable for the bar chart.  
 
-Desired Output for Deployment:  
+__Desired Output for Deployment:__  
+
 !["Bird Strikes by Factor"](https://github.com/TBarasch/Group_105/blob/master/imgs/2_charts.jpg?raw=true)
 
 
@@ -28,7 +29,8 @@ A single heatmap that shows number of strikes over time (X axis) by location (Y 
 - **Damage Type**: multi-choice dropdown menu, located in the top left of the screen to choose which damage types to be showen in the graphs: Substantial, Medium, Minor, or No damage (any combination of the 4 options), each assigned a different colour.
 - **Location Type**: dropdown, located above the heatmap chart, allowes for specification of one of two types of location, the State or the Airport from which the flight took off.
 
-Desired Output for Deployment:  
+__Desired Output for Deployment:__  
+
 ![](https://github.com/TBarasch/Group_105/blob/master/imgs/heatmap.jpg?raw=true)
 
 
