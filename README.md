@@ -10,7 +10,7 @@ created by: Evhen Dytyniak, Tani Barasch, and Robert Pimentel
 The purpose of the app is to investigate the effect of birdstrikes on aircraft between 1990 and 2002 in the United States.
 Different factors (flight phase, time of day, and bird size) and regions (states / airports) are explored, visualizing four classes of damage to aircraft. Aiming to do so with 3 graphs arranged in two tabs.
 
-##### Tab 1: 
+#### __Tab 1__: 
 In this tab, the left graph shows the number of birdstrikes over time, with the different damage levels - coloured. And on the right a bar chart showing the number of birdstrikes (Y axis) over one of three cetegories: 'Flight Phase', 'Time of Day', or 'Bird Size'.
 
 - **Damage Type**: multi-choice dropdown menu, located in the top left of the screen to choose which damage types to be showen in the graphs: Substantial, Medium, Minor, or No damage (any combination of the 4 options), each assigned a different colour.  
@@ -23,7 +23,7 @@ __Desired Output for Deployment:__
 
 
 
-##### Tab 2:
+#### __Tab 2__:
 A single heatmap that shows number of strikes over time (X axis) by location (Y axis), allowing for the following costumization:
 
 - **Damage Type**: multi-choice dropdown menu, located in the top left of the screen to choose which damage types to be showen in the graphs: Substantial, Medium, Minor, or No damage (any combination of the 4 options), each assigned a different colour.
