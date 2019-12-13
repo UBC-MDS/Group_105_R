@@ -1,0 +1,72 @@
+---
+title: "graphs_app"
+author: "Me"
+date: "05/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(tidyverse)
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r import, message=FALSE}
+df <- read_csv("data (copy)/birdstrikes_clean.csv")
+df['one'] = 1
+head(df)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+ggplot(data = df, aes(x = year, y = state)) +
+  geom_tile(data = df %>% group_by(year, state) %>% summarize(count = n()),aes(fill = count)) #+
+ # scale_fill_gradient(low = "#ccffcc",  high = "navyblue")
+```
+```{r}
+
+```
+
+```{r}
+make_heatmap_plot(y_var, dmg_lvl){
+  dmg_vect <- vector()
+  for(i in dmg_lvl){
+    dmg_vect <- c(dmg_vect, i) 
+  }
+  
+  if(length(dmg_vect) != 0 ){
+    h_plot <- ggplot(data = df, aes(x = year, y = state)) +
+    geom_tile(data = df %>% group_by(year, state) %>% summarize(count = n()), aes(fill = count))
+    
+  }
+  
+  heatmap <- ggplot(.....)
+}
+```
+```{r}
+a = c(1,2,3)
+length(a)
+```
+
+```{r}
+df %>% group_by(damage_level) %>% summarize(count = n())
+
+```
+
+
+
+
+
+
