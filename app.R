@@ -127,4 +127,49 @@ app$layout(
   )
 )
 
+# CALLBACKS & PLOT CREATION
+#==========================
+#Line PLOT
+#--------------------------
+app$callback(
+    output = list(id = 'line_plot', property = 'figure'),
+    params = list(input(id = 'date_slider', property = 'value'),
+                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
+    function(date_list, damage){
+        #line graph function
+    }
+)
+
+
+
+#BAR PLOT
+#--------------------------
+app$callback(
+    output = list(id = 'bar_plot', property = 'figure'),
+    params = list(input(id = 'bar_dropdown', property = 'value'),
+                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
+    function(category, damage){
+        #bar graph function
+    }
+)
+
+
+#HEATMAP
+#--------------------------
+app$callback(
+    output = list(id = 'heatmap_plot', property = 'figure'),
+    params = list(input(id = 'heatmap_dropdown', property = 'value'),
+                  input(id = 'damage_types_dropdown_tab2', property = 'value')),
+    function(y_category, damage){
+        #heatmap function
+    }
+)
+
+
+
+
+
+
+
+
 app$run_server()
