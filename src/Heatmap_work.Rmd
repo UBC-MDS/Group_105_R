@@ -51,7 +51,7 @@ ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut
 ```
 
 ```{r}
-y_varKe <- tibble(label = c("State", "Ariport"),
+y_varKey <- tibble(label = c("State", "Ariport",),
                    value = c("state", "airport"))
 
 dmg_unique <- unique(df$damage_level)
