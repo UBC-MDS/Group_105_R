@@ -46,26 +46,32 @@ ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut
 ```
 
 ```{r}
-dmg_unique <- unique(df$damage_level)
-make_heatmap_plot( years = c(1990,2002), dmg_lvl = dmg_unique, y_var = state){
-  dmg_vect <- vector()
-  for(i in dmg_lvl){
-    dmg_vect <- c(dmg_vect, i) 
-  }
-  
-  if(length(dmg_vect) != 0 ){
-    w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= years[1] & year <= years[2]) %>% group_by(year, y_var) %>% summarize(count = n())
+  dmg_unique <- unique(df$damage_level)
+
+  make_heatmap_plot( years = c(1990,2002), dmg_lvl = dmg_unique, y_var = state){
     
-    h_plot <- ggplot(data = w_df, aes(x = year, y = y_var)) +
-      geom_tile(aes(fill = count)) +
-      scale_fill_continuous(type = "viridis")
-    
-    ggplotly(h_plot) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
-                                                 "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
-                                displaylogo = FALSE)
+    dmg_vect <- vector()
+    for(i in dmg_lvl){
+      dmg_vect <- c(dmg_vect, i) 
     }
-  
-}
+    
+    y_label <- y_varKey$label[y_varKey$value==y_var]
+    
+    if(length(dmg_vect) != 0 ){
+      w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= min(years) & year <= max(years)) %>% group_by(year, y=!!sym(y_var)) %>% summarize(count = n())
+      
+      h_plot <- ggplot(data = w_df, aes(x = factor(year), y = factor(!!sym(y_var)))) +
+        geom_tile(aes(fill = count)) +
+        scale_fill_continuous(type = "viridis") +
+        xlab("Year") + 
+        ylab("y_label")
+      
+      ggplotly(h_plot) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
+                                                   "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
+                                  displaylogo = FALSE)
+      }
+    
+  }
 ```
 
 
