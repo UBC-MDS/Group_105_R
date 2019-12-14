@@ -1,6 +1,7 @@
 # DSCI 532 App Creation - Group 105
 
 created by: Evhen Dytyniak, Tani Barasch, and Robert Pimentel  
+[Link to deployed app](https://milestone-4-105.herokuapp.com/)
 
 ### Description:  
 The purpose of the app is to investigate the effect of birdstrikes on aircraft between 1990 and 2002 in the United States.
