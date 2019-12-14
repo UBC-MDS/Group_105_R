@@ -22,7 +22,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r import, message=FALSE}
-df <- read_csv("../data/birdstrikes_clean.csv")
+df <- read_csv("../data/birdstrikes_clean.csv") #read in DF
 df['one'] = 1
 head(df)
 ```
@@ -32,13 +32,18 @@ head(df)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
+#create ggplot - testing
 p <- ggplot(data = df %>% group_by(year, airport) %>% summarize(count = n()), aes(x = factor(year), y = airport)) +
   geom_tile(aes(fill = count)) +
   scale_fill_continuous(type = "viridis")# +
   
 p
+
+
 ```
 ```{r}
+
+#create plotly object - testing
 ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
                                                  "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
                       displaylogo = FALSE)
@@ -46,29 +51,35 @@ ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut
 ```
 
 ```{r}
-  dmg_unique <- unique(df$damage_level)
+y_varKey <- tibble(label = c("State", "Ariport",),
+                   value = c("state", "airport"))
 
-  make_heatmap_plot( years = c(1990,2002), dmg_lvl = dmg_unique, y_var = state){
+dmg_unique <- unique(df$damage_level)
+
+make_heatmap_plot <- function( dmg_lvl = dmg_unique, y_var = state){ #years = c(1990,2002)
     
-    dmg_vect <- vector()
-    for(i in dmg_lvl){
-      dmg_vect <- c(dmg_vect, i) 
-    }
+  dmg_vect <- vector() # these 3 lines can be removed - depending on what form the call back takes
+  for(i in dmg_lvl){
+    dmg_vect <- c(dmg_vect, i) 
+  }
     
-    y_label <- y_varKey$label[y_varKey$value==y_var]
+  y_label <- y_varKey$label[y_varKey$value==y_var] # extracting name for the y label from table defined outside of function
     
-    if(length(dmg_vect) != 0 ){
-      w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= min(years) & year <= max(years)) %>% group_by(year, !!sym(y_var)) %>% summarize(count = n())
+  if(length(dmg_vect) != 0 ){ # next two rows are wrangling the dataframe
+    w_df <- df %>% filter(damage_level %in% dmg_vect) %>% group_by(year, !!sym(y_var)) %>%   summarize(count = n())
       
-      h_plot <- ggplot(data = w_df, aes(x = factor(year), y = factor(!!sym(y_var)))) +
-        geom_tile(aes(fill = count)) +
-        scale_fill_continuous(type = "viridis") +
-        xlab("Year") + 
-        ylab("y_label")
+      # creat ggplot object
+  h_plot <- ggplot(data = w_df, aes(x = factor(year), y = factor(!!sym(y_var)))) +
+    geom_tile(aes(fill = count)) +
+    scale_fill_continuous(type = "viridis") +
+    xlab("Year") + 
+    ylab("y_label")
       
-      ggplotly(h_plot) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
+      # create plotly object - should be last peice of function 
+  plotly_graph <- ggplotly(h_plot) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
                                                    "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
                                   displaylogo = FALSE)
+  return(plotly_graph)
       }
     
   }
