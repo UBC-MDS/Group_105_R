@@ -58,7 +58,7 @@ ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut
     y_label <- y_varKey$label[y_varKey$value==y_var]
     
     if(length(dmg_vect) != 0 ){
-      w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= min(years) & year <= max(years)) %>% group_by(year, y=!!sym(y_var)) %>% summarize(count = n())
+      w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= min(years) & year <= max(years)) %>% group_by(year, !!sym(y_var)) %>% summarize(count = n())
       
       h_plot <- ggplot(data = w_df, aes(x = factor(year), y = factor(!!sym(y_var)))) +
         geom_tile(aes(fill = count)) +
