@@ -7,7 +7,7 @@ library(tidyverse)
 library(plotly)
 
 
-bs_data <- read_csv("https://raw.githubusercontent.com/UBC-MDS/Group_105_R/master/data/birdstrikes_clean.csv")
+df <- read_csv("https://raw.githubusercontent.com/UBC-MDS/Group_105_R/master/data/birdstrikes_clean.csv")
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
@@ -199,6 +199,8 @@ tab2_selectors <- htmlDiv(list(
         htmlH6('Plot: Birdstrikes by Location'),
         dropdown_heatmap,
         htmlHr(),
+        heatmap,
+        htmlHr(),
         dccMarkdown(
         "__Example Questions__  
         Using the interactive tools above, try answering the following:    
@@ -206,8 +208,7 @@ tab2_selectors <- htmlDiv(list(
         - What state experienced the most birdstrikes and in what year?  
         - What airport experienced the most birdstrikes and in what year and state did this occur?  
         - What states experienced the most birdstrikes causing minor damage and in what year did this occur?"
-        ),
-        htmlHr()       
+        )
         ), className = "row"
     )
 ), style = list('padding-left'= '130px',
@@ -332,6 +333,47 @@ app$callback(
     }
 )
 
+y_varKey <- tibble(label = c("State", "Ariport"),
+                   value = c("state", "airport"))
+dmg_unique <- unique(df$damage_level)
+
+make_heatmap_plot <- function( dmg_lvl = dmg_unique, y_var = state){ #years = c(1990,2002)
+    
+  dmg_vect <- vector() # these 3 lines can be removed - depending on what form the call back takes
+  for(i in dmg_lvl){
+    dmg_vect <- c(dmg_vect, i) 
+  }
+    
+  y_label <- y_varKey$label[y_varKey$value==y_var] # extracting name for the y label from table defined outside of function
+    
+  if(length(dmg_vect) != 0 ){ # next two rows are wrangling the dataframe
+        w_df <- df %>% filter(damage_level %in% dmg_vect) %>% group_by(year, !!sym(y_var)) %>%   summarize(count = n())
+        
+        # creat ggplot object
+    h_plot <- ggplot(data = w_df, aes(x = factor(year), y = factor(!!sym(y_var)))) +
+        geom_tile(aes(fill = count)) +
+        scale_fill_continuous(type = "viridis") +
+        labs(x = "Year", y = y_label, title = paste("Bird Strikes by ", y_label)) +
+        theme_minimal()
+        
+        # create plotly object - should be last peice of function 
+    
+    if(y_var == "State"){
+        h = 600
+        w = 900
+    }
+    else{
+        h = 900
+        w = 1100
+    }
+    plotly_graph <- ggplotly(h_plot, height = h, width = w) %>%
+                        config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d", "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),displaylogo = FALSE)
+    return(plotly_graph)
+      }
+      return(None)
+    
+  }
+
 
 #HEATMAP
 #--------------------------
@@ -342,6 +384,9 @@ app$callback(
     function(y_category, damage){
         #heatmap function
         # RETURN A ggplotly object here
+        make_heatmap_plot(damage, y_category)
+
+        
     }
 )
 
