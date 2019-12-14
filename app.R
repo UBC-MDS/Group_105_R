@@ -1,4 +1,3 @@
-
 library(dash)
 library(dashCoreComponents)
 library(dashHtmlComponents)
@@ -89,8 +88,31 @@ dropdown_heatmap <- dccDropdown(
     style = list(width = '30%')
 )
 
+#TITLE BLOCK
+#-----------------------------------
+paragraph <- htmlDiv(list(
+  htmlDiv(list(
+      htmlDiv(className = "columns"),
+      htmlDiv(list(
+          htmlH2("Aircraft Bird Strikes"),
+          dccMarkdown(
+              "The purpose of the app is to investigate the effect of birdstrikes on aircraft between 1990 and 2002 in the United States for 29 states.  
+              Different factors (flight phase, time of day, bird size) and regions (states, airports) are explored, visualizing four classes of damage to aircraft."),
+        htmlBr(),
+        dccMarkdown(
+            "The aim of __Tab 1__ is to visualize the trend of, number of, and damage caused by birdstrikes between 1990 and 2002.   
+            The visualizations in this tab explore what factors affect the number and of and damage caused by bird strikes.  
+            The aim of __Tab 2__ is to explore which states and airports observed the largest number of bird strikes between 1990 and 2002."
+          ),             
+        htmlBr()
+      ), className = "columns")
+    )
+  )
+), className = "row", style= list("background-color"= "#d1e8f7")
+)
+    
 #GRAPHS
-#-----------------------------------.
+#-----------------------------------
 
 line <- dccGraph( 
     # sandbox = 'allow-scripts',
@@ -254,6 +276,7 @@ app$layout(
     #   dropdown_heatmap,
     #   htmlBr(),
     #   htmlLabel('test5'), 
+    paragraph,
       tabs
     #   dropdown_barchart,
     #   dropdown_heatmap,
@@ -321,12 +344,5 @@ app$callback(
         # RETURN A ggplotly object here
     }
 )
-
-
-
-
-
-
-
 
 app$run_server()
