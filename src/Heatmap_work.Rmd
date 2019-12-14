@@ -12,6 +12,7 @@ library(dplyr)
 library(plotly)
 library(tidyverse)
 
+#library(htmlwidgets)
 ```
 
 ## R Markdown
@@ -21,7 +22,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r import, message=FALSE}
-df <- read_csv("data (copy)/birdstrikes_clean.csv")
+df <- read_csv("../data/birdstrikes_clean.csv")
 df['one'] = 1
 head(df)
 ```
@@ -31,37 +32,45 @@ head(df)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-ggplot(data = df, aes(x = year, y = state)) +
-  geom_tile(data = df %>% group_by(year, state) %>% summarize(count = n()),aes(fill = count)) #+
- # scale_fill_gradient(low = "#ccffcc",  high = "navyblue")
+p <- ggplot(data = df %>% group_by(year, airport) %>% summarize(count = n()), aes(x = factor(year), y = airport)) +
+  geom_tile(aes(fill = count)) +
+  scale_fill_continuous(type = "viridis")# +
+  
+p
 ```
 ```{r}
+ggplotly(p) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
+                                                 "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
+                      displaylogo = FALSE)
 
 ```
 
 ```{r}
-make_heatmap_plot(y_var, dmg_lvl){
+dmg_unique <- unique(df$damage_level)
+make_heatmap_plot( years = c(1990,2002), dmg_lvl = dmg_unique, y_var = state){
   dmg_vect <- vector()
   for(i in dmg_lvl){
     dmg_vect <- c(dmg_vect, i) 
   }
   
   if(length(dmg_vect) != 0 ){
-    h_plot <- ggplot(data = df, aes(x = year, y = state)) +
-    geom_tile(data = df %>% group_by(year, state) %>% summarize(count = n()), aes(fill = count))
+    w_df <- df %>% filter(damage_level %in% dmg_vect) %>% filter(year >= years[1] & year <= years[2]) %>% group_by(year, y_var) %>% summarize(count = n())
     
-  }
+    h_plot <- ggplot(data = w_df, aes(x = year, y = y_var)) +
+      geom_tile(aes(fill = count)) +
+      scale_fill_continuous(type = "viridis")
+    
+    ggplotly(h_plot) %>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
+                                                 "select2d", "lasso2d", "toggleSpikelines", "hoverCompareCartesian"),
+                                displaylogo = FALSE)
+    }
   
-  heatmap <- ggplot(.....)
 }
 ```
-```{r}
-a = c(1,2,3)
-length(a)
-```
+
 
 ```{r}
-df %>% group_by(damage_level) %>% summarize(count = n())
+
 
 ```
 
