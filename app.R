@@ -1,7 +1,16 @@
 library(dash)
 library(dashCoreComponents)
 library(dashHtmlComponents)
-library(tidyverse)
+#library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(purrr)
+library(tibble)
+library(forcats)
+library(RColorBrewer)
+
 library(plotly)
 
 df <- read_csv("https://raw.githubusercontent.com/UBC-MDS/Group_105_R/master/data/birdstrikes_clean.csv")
@@ -431,4 +440,7 @@ app$callback(
     }
 )
 
-app$run_server()
+#app$run_server()
+
+#for deployment
+app$run_server(host = "0.0.0.0", port = Sys.getenv('PORT', 8050))
