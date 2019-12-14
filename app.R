@@ -1,11 +1,8 @@
 library(dash)
 library(dashCoreComponents)
 library(dashHtmlComponents)
-
-#library(dashTable)
 library(tidyverse)
 library(plotly)
-
 
 df <- read_csv("https://raw.githubusercontent.com/UBC-MDS/Group_105_R/master/data/birdstrikes_clean.csv")
 
@@ -92,7 +89,6 @@ dropdown_heatmap <- dccDropdown(
 #-----------------------------------
 paragraph <- htmlDiv(list(
   htmlDiv(list(
-      htmlDiv(className = "columns"),
       htmlDiv(list(
           htmlH2("Aircraft Bird Strikes"),
           dccMarkdown(
@@ -105,38 +101,22 @@ paragraph <- htmlDiv(list(
             The aim of __Tab 2__ is to explore which states and airports observed the largest number of bird strikes between 1990 and 2002."
           ),             
         htmlBr()
-      ), className = "columns")
-    )
+      ), className = "six columns", 
+         style = list('padding-left'= '130px', 'padding-right'= '130px')
+      ),      
+      htmlDiv(list(htmlImg(src='https://cdn.pixabay.com/photo/2012/04/16/13/55/swans-36088_960_720.png', width = '35%')),
+        className = "six columns")
+    ), className = "row"
   )
-), className = "row", style= list("background-color"= "#d1e8f7")
+), style= list("background-color"= "#d1e8f7")
 )
     
 #GRAPHS
 #-----------------------------------
 
-line <- dccGraph( 
-    # sandbox = 'allow-scripts',
-    id = 'line_plot',
-    # height = '550',
-    # width = '750',
-    # style = {'border-width': '0'}
-)
-
-bar <- dccGraph(
-    # sandbox = 'allow-scripts',
-    id = 'bar_plot',
-    # height = '550',
-    # width = '650',
-    # style = {'border-width': '0'}
-)
-
-heatmap <- dccGraph(
-    # sandbox = 'allow-scripts',
-    id = 'heatmap_plot',
-    # height = '1100',
-    # width = '1000',
-    # style = {'border-width': '0'}
-) 
+line <- dccGraph(id = 'line_plot')
+bar <- dccGraph(id = 'bar_plot')
+heatmap <- dccGraph(id = 'heatmap_plot') 
 
 # TAB OBJECTS
 #==========================
@@ -163,6 +143,19 @@ tab1_selectors <- htmlDiv(list(
             dropdown_barchart,
             htmlBr()
             ), className = "six columns")
+        ), className = "row"
+    ),
+    htmlDiv(list(
+        htmlHr()
+        ), className = "row"
+    ),
+    htmlDiv(list(
+        htmlDiv(list(
+            line
+        ), className = "six columns"),
+        htmlDiv(list(
+            bar
+        ), className = "six columns")
         ), className = "row"
     ),
     htmlDiv(list(
@@ -218,8 +211,8 @@ tab2_selectors <- htmlDiv(list(
 
 tabs <- htmlDiv(list(
             dccTabs(id="tabs", value='tab-1', 
-                    style = list('padding-left'= '130px',
-                             'padding-right'= '130px'), 
+                    # style = list('padding-left'= '130px',
+                    #          'padding-right'= '130px'), 
                     colors= list("border"= "white",
                              "primary"= "dodgerblue",
                              "background"= "AliceBlue"),
@@ -228,7 +221,7 @@ tabs <- htmlDiv(list(
                         dccTab(label='Tab 2- Bird Strikes by Location', value='tab-2')
                     )),
                     htmlDiv(id='tabs-content')#, style = {'backgroundColor':'tan'})
-        ))
+            ))
 
 app$callback(output(id ='tabs-content', property = 'children'),
             params = list(input(id = 'tabs', property = 'value')),
@@ -236,103 +229,33 @@ app$callback(output(id ='tabs-content', property = 'children'),
                 if(tab == 'tab-1'){
                     return(htmlDiv(list(
                         tab1_selectors
-                    )
-                    )
-                    )
+                    )))
                 }
                 else if(tab == 'tab-2'){
                     return(htmlDiv(list(
                         tab2_selectors
-                        
-                    ))
-                    )
+                    ))) 
                 }
             })
 
 
 # APP LAYOUT
 #==========================
-
-# app.layout = html.Div([title_header,
-#                        tabs,
-#                        dcc.Markdown(
-#                            '''
-#                            [Photo Attribution](https://pixabay.com/vectors/swans-silhouette-black-flying-36088/)
-#                            '''
-#                        )])
-
 app$layout(
   htmlDiv(
     list(
-    #   htmlH1('test'),
-    #   htmlH2('test2'),
-    #   #selection components
-    #   htmlLabel('test3'),
-    #   dropdown_selector_tab1,
-    #   dropdown_selector_tab2,
-    # #   htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
-    #   htmlLabel('test4'),
-    #   rangeslider_selector,
-    #   dropdown_barchart,
-    #   dropdown_heatmap,
-    #   htmlBr(),
-    #   htmlLabel('test5'), 
     paragraph,
-      tabs
-    #   dropdown_barchart,
-    #   dropdown_heatmap,
-    #   line,
-    #   bar,
-    #   heatmap,
-      #graphs and table
-    #   graph,
-    #   htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-    #   country_graph, # NEW
-    #   htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-    #   htmlLabel('Try sorting by table columns!'),
-    #   table,
-    #   htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-    #   dccMarkdown("test6")
-    )
-    
-  )
-)
+    tabs,
+    dccMarkdown(
+          "[Photo Attribution](https://pixabay.com/vectors/swans-silhouette-black-flying-36088/)"
+          )
+    )))
 
-
-# CALLBACKS & PLOT CREATION
+# PLOT CREATION 
 #==========================
-# NOTES: 
-# the range slider and dropdowns return LISTS (int for range slider, char for dropdowns) 
-# they can be iterated over
-# to extract value use: [[]]
 
-
-#Line PLOT
+#HEATMAP
 #--------------------------
-app$callback(
-    output = list(id = 'line_plot', property = 'figure'),
-    params = list(input(id = 'date_slider', property = 'value'),
-                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
-    function(date, damage){       
-        #line plot function
-        # RETURN A ggplotly object here
-    }
-)
-
-
-
-#BAR PLOT
-#--------------------------
-app$callback(
-    output = list(id = 'bar_plot', property = 'figure'),
-    params = list(input(id = 'bar_dropdown', property = 'value'),
-                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
-    function(category, damage){
-        #bar graph function
-        # RETURN A ggplotly object here
-    }
-)
-
 y_varKey <- tibble(label = c("State", "Ariport"),
                    value = c("state", "airport"))
 dmg_unique <- unique(df$damage_level)
@@ -374,6 +297,127 @@ make_heatmap_plot <- function( dmg_lvl = dmg_unique, y_var = state){ #years = c(
     
   }
 
+#Line/Area Plot
+#--------------------------
+# dmg_unique <- unique(df$damage_level)
+make_linegraph <- function(years = c(1990,2002), dmg_lvl = dmg_unique){ #years=c(1990, 2002)
+    dmg_vect <- vector()
+    for(i in dmg_lvl){
+        dmg_vect <- c(dmg_vect, i) 
+    }
+    if(length(dmg_vect) != 0 ){  
+        w_df <- df %>% filter(damage_level %in% dmg_vect) %>% 
+                   filter(year >= years[1] & year <= years[2]) %>% 
+                   group_by(year, damage_level) %>% 
+                   summarise(count = n())
+
+        w_df$damage_level <- factor(w_df$damage_level,levels = c('Substantial', 'Medium', 'Minor', 'None')) # Fixing Legend order
+        area_plot <- ggplot(w_df, aes(x= year, y= count, fill= damage_level)) + 
+            geom_area(position = "identity", alpha=0.3 , size=0.3) + 
+            scale_x_continuous(breaks = unique(w_df$year)) +
+            scale_fill_manual(values=c("Substantial" = "red", "Medium" = "#0066FF","Minor" = "grey", "None" = "#339933")) + 
+            labs(y = "Total Bird Strikes",
+                 x = "Year",
+                 fill = "Damage_level",
+                 title = "Bird Strike Damage over Time") +
+            theme_bw()
+        area_plot <- area_plot + theme(legend.text= element_text(color = "black", size = 10),legend.position = "top",
+                                       legend.title= element_text(color = "black", size = 12)) 
+        # Removes extra plotly buttoms and create plotly object 
+        area_plot <- ggplotly(area_plot)%>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",
+                                                            "hoverClosestCartesian", "resetScale2d"),
+                                                   displaylogo = FALSE)    
+        area_plot <- ggplotly(area_plot, height = 4, width = 9) # Set dimensions for the plot
+    return(area_plot)                     
+    }
+    return(None)
+}
+
+#Bar Plot
+#--------------------------
+# Defining Default values for plot
+# dmg_unique <- unique(df$damage_level)
+
+# gets the label matching the column value
+xaxisKey <- tibble(label = c("Flight Phase", "Bird Size", "Time of Day"),
+                   value = c("flight_phase", "bird_size", "time_of_day"))
+
+make_bargraph <- function(xaxis, dmg_lvl = dmg_unique){
+
+    dmg_vect <- vector()
+    
+    for(i in dmg_lvl){
+        dmg_vect <- c(dmg_vect, i) 
+    }
+    
+    if(length(dmg_vect) != 0 ){
+    
+        w_df <- df %>% filter(damage_level %in% dmg_vect) %>% 
+                   #filter(year >= years[1] & year <= years[2]) %>% # This was not included in the python version but does not hurt
+                   group_by(damage_level, !!sym(xaxis)) %>% 
+                   summarise(count = n())
+        
+        w_df$damage_level <- factor(w_df$damage_level,levels = c('Substantial', 'Medium', 'Minor', 'None')) # Fixing Legend order
+        
+    x_label <- xaxisKey$label[xaxisKey$value==xaxis] # labels for X-axis
+                            
+    bar_plot <- ggplot(w_df, aes(x = !!sym(xaxis), y = count)) +
+                  geom_col(aes(fill = damage_level), width = 0.7 , alpha=0.3 , size=0.3, colour="black") + 
+                  scale_fill_manual(values=c("Substantial" = "red", "Medium" = "#0066FF","Minor" = "grey", "None" = "#339933")) +
+                  labs(y = "Total Bird Strikes",
+                       x = x_label,
+                       fill = "Damage_level") +
+                  ggtitle(paste0("Effect of ",  x_label, " on Bird Strike")) +
+                  theme(legend.position = "top") + 
+                  theme_bw()
+                          
+    bar_plot <- bar_plot + theme(legend.text= element_text(color = "black", size = 10), legend.position = "top", # Optional changes
+                               legend.title= element_text(color = "black", size = 12)) 
+
+    # Removes extra plotly buttoms and create plotly object                     
+    bar_plot <- ggplotly(bar_plot)%>% config(modeBarButtonsToRemove = c("zoom2d", "zoomIn2d", "zoomOut2d", "pan2d",  
+                                    "hoverClosestCartesian", "resetScale2d", "select2d", "lasso2d", "toggleSpikelines"),
+                                    displaylogo = FALSE)
+                          
+    bar_plot <- ggplotly(bar_plot, height = 4, width = 9) # Set dimensions for the plot
+    
+    return(bar_plot)                     
+    }
+    return(None)
+}
+
+
+# CALLBACKS 
+#==========================
+# NOTES: 
+# the range slider and dropdowns return LISTS (int for range slider, char for dropdowns) 
+# they can be iterated over
+# to extract value use: [[]]
+
+
+#Line PLOT
+#--------------------------
+app$callback(
+    output = list(id = 'line_plot', property = 'figure'),
+    params = list(input(id = 'date_slider', property = 'value'),
+                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
+    function(date, damage){       
+        # RETURN A ggplotly object here
+        make_linegraph(date, damage)
+    }
+)
+
+#BAR PLOT
+#--------------------------
+app$callback(
+    output = list(id = 'bar_plot', property = 'figure'),
+    params = list(input(id = 'bar_dropdown', property = 'value'),
+                  input(id = 'damage_types_dropdown_tab1', property = 'value')),
+    function(category, damage){
+        # RETURN A ggplotly object here
+        make_bargraph(category, damage)
+    }
+)
 
 #HEATMAP
 #--------------------------
@@ -382,11 +426,8 @@ app$callback(
     params = list(input(id = 'heatmap_dropdown', property = 'value'),
                   input(id = 'damage_types_dropdown_tab2', property = 'value')),
     function(y_category, damage){
-        #heatmap function
         # RETURN A ggplotly object here
-        make_heatmap_plot(damage, y_category)
-
-        
+        make_heatmap_plot(damage, y_category)   
     }
 )
 
